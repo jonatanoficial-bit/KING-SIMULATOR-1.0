@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Rota Mercante",
+    "file": "dlc/trade_expansion.json",
+    "version": "1.0.0",
+    "description": "Adiciona eventos focados em rotas comerciais e riqueza."
+  }
+]

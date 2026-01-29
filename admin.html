@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin – Medieval Kingdoms</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1 class="title">Admin</h1>
+    </header>
+    <main id="admin" class="admin-container">
+      <!-- Tela de login -->
+      <section id="login-screen" class="screen active">
+        <h2>Login de Administrador</h2>
+        <div class="form-group">
+          <label for="admin-username">Usuário</label>
+          <input type="text" id="admin-username" placeholder="Usuário" />
+        </div>
+        <div class="form-group">
+          <label for="admin-password">Senha</label>
+          <input type="password" id="admin-password" placeholder="Senha" />
+        </div>
+        <button id="login-btn" class="btn">Entrar</button>
+        <div id="login-error" class="error-message hidden">
+          Usuário ou senha incorretos.
+        </div>
+      </section>
+      <!-- Painel administrativo -->
+      <section id="panel-screen" class="screen hidden">
+        <h2>Gerenciar DLCs</h2>
+        <div id="dlc-list" class="dlc-list"></div>
+        <h3>Instalar nova DLC</h3>
+        <form id="dlc-form" class="dlc-form" autocomplete="off">
+          <div class="form-group">
+            <label for="dlc-name">Nome da DLC</label>
+            <input type="text" id="dlc-name" required />
+          </div>
+          <div class="form-group">
+            <label for="dlc-file">Arquivo de Eventos (JSON)</label>
+            <input type="file" id="dlc-file" accept="application/json" required />
+          </div>
+          <button type="submit" class="btn">Adicionar DLC</button>
+        </form>
+        <div id="dlc-message" class="success-message hidden"></div>
+      </section>
+    </main>
+    <footer class="app-footer">
+      <a href="index.html">Voltar ao Jogo</a>
+    </footer>
+    <script src="admin.js"></script>
+  </body>
+</html>

@@ -1,0 +1,161 @@
+[
+  {
+    "id": "start_prince",
+    "stage": "prince",
+    "text": "Você é o jovem príncipe de [nation]. Seu pai, o rei, está envelhecendo e você precisa se preparar para o trono. O que deseja focar primeiro?",
+    "choices": [
+      {
+        "text": "Fortalecer relações diplomáticas",
+        "effects": {"diplomacy": 10},
+        "next": "diplomacy_training"
+      },
+      {
+        "text": "Melhorar força militar",
+        "effects": {"military": 10},
+        "next": "military_training"
+      },
+      {
+        "text": "Aumentar riqueza por comércio",
+        "effects": {"gold": 15},
+        "next": "trade_training"
+      }
+    ]
+  },
+  {
+    "id": "diplomacy_training",
+    "stage": "prince",
+    "text": "Você passa meses viajando entre cortes estrangeiras, aprendendo com conselheiros e negociando tratados.",
+    "choices": [
+      {
+        "text": "Continuar viagem",
+        "effects": {"diplomacy": 5},
+        "next": "father_ill"
+      },
+      {
+        "text": "Voltar para casa",
+        "effects": {},
+        "next": "father_ill"
+      }
+    ]
+  },
+  {
+    "id": "military_training",
+    "stage": "prince",
+    "text": "Você treina com os melhores comandantes do reino, aperfeiçoando táticas e estratégias de batalha.",
+    "choices": [
+      {
+        "text": "Participar de torneios",
+        "effects": {"military": 5},
+        "next": "father_ill"
+      },
+      {
+        "text": "Treinar tropas locais",
+        "effects": {},
+        "next": "father_ill"
+      }
+    ]
+  },
+  {
+    "id": "trade_training",
+    "stage": "prince",
+    "text": "Você investe tempo nas finanças do reino, aprendendo com mercadores e construindo novas rotas comerciais.",
+    "choices": [
+      {
+        "text": "Abrir novas rotas", 
+        "effects": {"gold": 10},
+        "next": "father_ill"
+      },
+      {
+        "text": "Cobrar impostos", 
+        "effects": {"gold": 5, "legitimacy": -5},
+        "next": "father_ill"
+      }
+    ]
+  },
+  {
+    "id": "father_ill",
+    "stage": "prince",
+    "text": "Seu pai adoece gravemente. Os conselheiros aguardam suas decisões: você pode tentar curá-lo com remédios caros ou preparar-se para o trono.",
+    "choices": [
+      {
+        "text": "Investir em cura",
+        "effects": {"gold": -20},
+        "next": "war_threat"
+      },
+      {
+        "text": "Preparar-se para reinar",
+        "effects": {"legitimacy": 10},
+        "next": "war_threat"
+      }
+    ]
+  },
+  {
+    "id": "war_threat",
+    "stage": "prince",
+    "text": "Uma nação vizinha ameaça invadir. Seu pai está incapaz. Você decide...",
+    "choices": [
+      {
+        "text": "Solicitar ajuda diplomática",
+        "effects": {"diplomacy": -5, "military": 5},
+        "next": "ascension"
+      },
+      {
+        "text": "Pagar mercenários",
+        "effects": {"gold": -30, "military": 10},
+        "next": "ascension"
+      }
+    ]
+  },
+  {
+    "id": "ascension",
+    "stage": "king",
+    "text": "Seu pai falece. Você é coroado rei de [nation]. Agora, todas as decisões são suas.",
+    "choices": [
+      {
+        "text": "Começar reinado",
+        "effects": {"legitimacy": 20},
+        "next": "king_start"
+      }
+    ]
+  },
+  {
+    "id": "king_start",
+    "stage": "king",
+    "text": "Como rei, você deve equilibrar diplomacia, guerra e economia. Um vizinho oferece aliança comercial.",
+    "choices": [
+      {
+        "text": "Aceitar aliança",
+        "effects": {"gold": 20, "diplomacy": 10},
+        "next": "king_event2"
+      },
+      {
+        "text": "Recusar aliança",
+        "effects": {"diplomacy": -10, "military": 10},
+        "next": "king_event2"
+      }
+    ]
+  },
+  {
+    "id": "king_event2",
+    "stage": "king",
+    "text": "Uma rebelião interna ameaça seu trono. O que você faz?",
+    "choices": [
+      {
+        "text": "Negociar com rebeldes",
+        "effects": {"diplomacy": 10, "legitimacy": 5},
+        "next": "end_game"
+      },
+      {
+        "text": "Suprimir com força",
+        "effects": {"military": -10, "legitimacy": -5},
+        "next": "end_game"
+      }
+    ]
+  },
+  {
+    "id": "end_game",
+    "stage": "king",
+    "text": "Após anos de reinado, as decisões moldaram seu reino. Obrigado por jogar!",
+    "choices": []
+  }
+]

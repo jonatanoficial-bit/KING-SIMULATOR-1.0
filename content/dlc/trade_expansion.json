@@ -1,0 +1,42 @@
+[
+  {
+    "id": "trade_1",
+    "stage": "king",
+    "text": "Os mercadores sugerem criar uma rota marítima arriscada mas lucrativa para o Oriente.",
+    "choices": [
+      {
+        "text": "Investir na rota",
+        "effects": {"gold": 30, "diplomacy": 5},
+        "next": "trade_2"
+      },
+      {
+        "text": "Recusar a proposta",
+        "effects": {"diplomacy": -5},
+        "next": "trade_2"
+      }
+    ]
+  },
+  {
+    "id": "trade_2",
+    "stage": "king",
+    "text": "A rota marítima enfrenta piratas. Você precisa decidir como proteger seus navios.",
+    "choices": [
+      {
+        "text": "Contratar escoltas militares",
+        "effects": {"gold": -10, "military": -5},
+        "next": "trade_end"
+      },
+      {
+        "text": "Negociar com os piratas",
+        "effects": {"gold": -5, "diplomacy": -5},
+        "next": "trade_end"
+      }
+    ]
+  },
+  {
+    "id": "trade_end",
+    "stage": "king",
+    "text": "A rota comercial rende grandes lucros e fortalece suas relações comerciais. Os mercadores estão satisfeitos.",
+    "choices": []
+  }
+]
