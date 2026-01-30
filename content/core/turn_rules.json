@@ -1,0 +1,12 @@
+{
+  "pa_per_turn": 3,
+  "income": {
+    "gold": 5
+  },
+  "decay": {
+    "legitimacy": 0,
+    "military": 0,
+    "diplomacy": 0
+  },
+  "max_turns": 24
+}

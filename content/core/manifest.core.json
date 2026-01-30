@@ -1,0 +1,18 @@
+{
+  "name": "Medieval Kingdoms Turn-Based Core",
+  "version": "1.0.0",
+  "files": {
+    "locales": ["locales.en.json", "locales.pt.json"],
+    "nations": "nations.json",
+    "traits": "traits.json",
+    "turn_rules": "turn_rules.json",
+    "actions": "actions.json",
+    "factions": "factions.json",
+    "arcs": ["arcs/arc_kingdom_rise.json"],
+    "events": [
+      "events/events_prince.json",
+      "events/events_king.json"
+    ],
+    "endings": "endings.json"
+  }
+}

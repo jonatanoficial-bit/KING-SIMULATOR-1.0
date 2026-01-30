@@ -1,0 +1,11 @@
+{
+  "id": "arc_kingdom_rise",
+  "milestones": [
+    {
+      "id": "succession_crisis",
+      "unlock": {"turnAtLeast": 4, "stageIn": ["king"]},
+      "onStartQueueEvents": ["event_succession"],
+      "flagsSet": ["succession_crisis"]
+    }
+  ]
+}

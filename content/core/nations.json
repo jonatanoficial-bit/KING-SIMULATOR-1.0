@@ -1,0 +1,44 @@
+{
+  "nations": [
+    {
+      "id": "england",
+      "nameKey": "nation.england.name",
+      "descKey": "nation.england.desc",
+      "stats": {"legitimacy": 50, "gold": 60, "military": 40, "diplomacy": 60},
+      "traits": ["diplomat"],
+      "image": "assets/images/nations/england.png"
+    },
+    {
+      "id": "france",
+      "nameKey": "nation.france.name",
+      "descKey": "nation.france.desc",
+      "stats": {"legitimacy": 50, "gold": 40, "military": 60, "diplomacy": 40},
+      "traits": ["ambitious"],
+      "image": "assets/images/nations/france.png"
+    },
+    {
+      "id": "hre",
+      "nameKey": "nation.hre.name",
+      "descKey": "nation.hre.desc",
+      "stats": {"legitimacy": 40, "gold": 50, "military": 50, "diplomacy": 50},
+      "traits": ["just"],
+      "image": "assets/images/nations/hre.png"
+    },
+    {
+      "id": "castile",
+      "nameKey": "nation.castile.name",
+      "descKey": "nation.castile.desc",
+      "stats": {"legitimacy": 55, "gold": 45, "military": 45, "diplomacy": 40},
+      "traits": ["devout"],
+      "image": "assets/images/nations/castile.png"
+    },
+    {
+      "id": "ottoman",
+      "nameKey": "nation.ottoman.name",
+      "descKey": "nation.ottoman.desc",
+      "stats": {"legitimacy": 45, "gold": 60, "military": 55, "diplomacy": 50},
+      "traits": ["cruel"],
+      "image": "assets/images/nations/ottoman.png"
+    }
+  ]
+}

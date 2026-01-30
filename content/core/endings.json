@@ -1,0 +1,48 @@
+{
+  "victory": [
+    {
+      "id": "victory_diplomatic",
+      "requirements": {"minStats": {"diplomacy": 80}},
+      "titleKey": "ending.victory_diplomatic.title",
+      "textKey": "ending.victory_diplomatic.text",
+      "image": "assets/images/endings/victory.png"
+    },
+    {
+      "id": "victory_military",
+      "requirements": {"minStats": {"military": 80}},
+      "titleKey": "ending.victory_military.title",
+      "textKey": "ending.victory_military.text",
+      "image": "assets/images/endings/victory.png"
+    },
+    {
+      "id": "victory_economic",
+      "requirements": {"minStats": {"gold": 150}},
+      "titleKey": "ending.victory_economic.title",
+      "textKey": "ending.victory_economic.text",
+      "image": "assets/images/endings/victory.png"
+    }
+  ],
+  "gameover": [
+    {
+      "id": "overthrow",
+      "requirements": {"maxStats": {"legitimacy": 0}},
+      "titleKey": "ending.overthrow.title",
+      "textKey": "ending.overthrow.text",
+      "image": "assets/images/endings/defeat.png"
+    },
+    {
+      "id": "bankrupt",
+      "requirements": {"maxStats": {"gold": -50}},
+      "titleKey": "ending.bankrupt.title",
+      "textKey": "ending.bankrupt.text",
+      "image": "assets/images/endings/defeat.png"
+    },
+    {
+      "id": "war_loss",
+      "requirements": {"maxStats": {"military": 0}},
+      "titleKey": "ending.war_loss.title",
+      "textKey": "ending.war_loss.text",
+      "image": "assets/images/endings/defeat.png"
+    }
+  ]
+}

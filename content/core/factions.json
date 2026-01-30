@@ -1,0 +1,24 @@
+{
+  "factions": [
+    {
+      "id": "nobility",
+      "name": "Nobility",
+      "loyalty": 50
+    },
+    {
+      "id": "clergy",
+      "name": "Clergy",
+      "loyalty": 50
+    },
+    {
+      "id": "army",
+      "name": "Army",
+      "loyalty": 50
+    },
+    {
+      "id": "merchants",
+      "name": "Merchants",
+      "loyalty": 50
+    }
+  ]
+}

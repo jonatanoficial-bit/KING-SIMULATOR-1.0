@@ -1,0 +1,191 @@
+{
+  "version": "1.0.0",
+  "actions": [
+    {
+      "id": "raise_taxes",
+      "costPA": 1,
+      "titleKey": "action.raise_taxes.title",
+      "descKey": "action.raise_taxes.desc",
+      "requirements": {},
+      "effects": {"stats": {"gold": 15, "legitimacy": -5}},
+      "mayTrigger": ["event_revolt"]
+    },
+    {
+      "id": "lower_taxes",
+      "costPA": 1,
+      "titleKey": "action.lower_taxes.title",
+      "descKey": "action.lower_taxes.desc",
+      "requirements": {},
+      "effects": {"stats": {"gold": -10, "legitimacy": 5}},
+      "mayTrigger": []
+    },
+    {
+      "id": "invest_infrastructure",
+      "costPA": 1,
+      "titleKey": "action.invest_infrastructure.title",
+      "descKey": "action.invest_infrastructure.desc",
+      "requirements": {"minStats": {"gold": 20}},
+      "effects": {"stats": {"gold": -20, "legitimacy": 5, "diplomacy": 2}},
+      "mayTrigger": []
+    },
+    {
+      "id": "host_feast",
+      "costPA": 1,
+      "titleKey": "action.host_feast.title",
+      "descKey": "action.host_feast.desc",
+      "requirements": {"minStats": {"gold": 15}},
+      "effects": {"stats": {"gold": -15, "legitimacy": 8, "diplomacy": 3}},
+      "mayTrigger": []
+    },
+    {
+      "id": "recruit_troops",
+      "costPA": 1,
+      "titleKey": "action.recruit_troops.title",
+      "descKey": "action.recruit_troops.desc",
+      "requirements": {"minStats": {"gold": 10}},
+      "effects": {"stats": {"gold": -10, "military": 10}},
+      "mayTrigger": []
+    },
+    {
+      "id": "train_army",
+      "costPA": 1,
+      "titleKey": "action.train_army.title",
+      "descKey": "action.train_army.desc",
+      "requirements": {"minStats": {"military": 5}},
+      "effects": {"stats": {"military": 5, "gold": -5}},
+      "mayTrigger": []
+    },
+    {
+      "id": "fortify_border",
+      "costPA": 1,
+      "titleKey": "action.fortify_border.title",
+      "descKey": "action.fortify_border.desc",
+      "requirements": {"stageIn": ["king"]},
+      "effects": {"stats": {"gold": -15, "military": 5, "legitimacy": 3}},
+      "mayTrigger": []
+    },
+    {
+      "id": "propose_alliance",
+      "costPA": 1,
+      "titleKey": "action.propose_alliance.title",
+      "descKey": "action.propose_alliance.desc",
+      "requirements": {},
+      "effects": {"stats": {"diplomacy": 6, "legitimacy": 2}},
+      "mayTrigger": ["event_diplomacy"],
+      "flagsSet": ["alliance_offer"]
+    },
+    {
+      "id": "send_gift",
+      "costPA": 1,
+      "titleKey": "action.send_gift.title",
+      "descKey": "action.send_gift.desc",
+      "requirements": {"minStats": {"gold": 10}},
+      "effects": {"stats": {"gold": -10, "diplomacy": 8}},
+      "mayTrigger": []
+    },
+    {
+      "id": "declare_war",
+      "costPA": 2,
+      "titleKey": "action.declare_war.title",
+      "descKey": "action.declare_war.desc",
+      "requirements": {"stageIn": ["king"], "minStats": {"military": 20}},
+      "effects": {"stats": {"legitimacy": -10, "military": -5}},
+      "mayTrigger": ["event_war"],
+      "flagsSet": ["war_declaration"]
+    },
+    {
+      "id": "sign_trade_route",
+      "costPA": 1,
+      "titleKey": "action.sign_trade_route.title",
+      "descKey": "action.sign_trade_route.desc",
+      "requirements": {},
+      "effects": {"stats": {"gold": 10, "diplomacy": 4}},
+      "mayTrigger": ["event_trade"],
+      "flagsSet": ["trade_proposal", "trade_route_signed"]
+    },
+    {
+      "id": "host_tournament",
+      "costPA": 1,
+      "titleKey": "action.host_tournament.title",
+      "descKey": "action.host_tournament.desc",
+      "requirements": {"minStats": {"gold": 20}},
+      "effects": {"stats": {"gold": -20, "legitimacy": 7, "military": 5}},
+      "mayTrigger": ["event_tournament"],
+      "flagsSet": ["tournament_hosted"]
+    },
+    {
+      "id": "pass_law",
+      "costPA": 1,
+      "titleKey": "action.pass_law.title",
+      "descKey": "action.pass_law.desc",
+      "requirements": {"stageIn": ["king"]},
+      "effects": {"stats": {"legitimacy": 4, "diplomacy": -2}},
+      "mayTrigger": ["event_court_meeting"],
+      "flagsSet": ["law_pass_requested"]
+    },
+    {
+      "id": "spy_on_nobles",
+      "costPA": 1,
+      "titleKey": "action.spy_on_nobles.title",
+      "descKey": "action.spy_on_nobles.desc",
+      "requirements": {},
+      "effects": {"stats": {"diplomacy": -2}},
+      "mayTrigger": ["event_conspiracy"],
+      "flagsSet": ["noble_spy"]
+    },
+    {
+      "id": "sabotage_enemy",
+      "costPA": 1,
+      "titleKey": "action.sabotage_enemy.title",
+      "descKey": "action.sabotage_enemy.desc",
+      "requirements": {"minStats": {"diplomacy": 10}},
+      "effects": {"stats": {"diplomacy": -5, "military": 3}},
+      "mayTrigger": []
+    },
+    {
+      "id": "arrange_marriage",
+      "costPA": 1,
+      "titleKey": "action.arrange_marriage.title",
+      "descKey": "action.arrange_marriage.desc",
+      "requirements": {},
+      "effects": {"stats": {"diplomacy": 5, "legitimacy": 3}},
+      "mayTrigger": []
+    },
+    {
+      "id": "hold_court",
+      "costPA": 1,
+      "titleKey": "action.hold_court.title",
+      "descKey": "action.hold_court.desc",
+      "requirements": {},
+      "effects": {"stats": {"legitimacy": 6, "gold": -5}},
+      "mayTrigger": []
+    },
+    {
+      "id": "suppress_revolt",
+      "costPA": 1,
+      "titleKey": "action.suppress_revolt.title",
+      "descKey": "action.suppress_revolt.desc",
+      "requirements": {"minStats": {"military": 10}},
+      "effects": {"stats": {"military": -3, "legitimacy": -5}},
+      "mayTrigger": []
+    },
+    {
+      "id": "fund_clergy",
+      "costPA": 1,
+      "titleKey": "action.fund_clergy.title",
+      "descKey": "action.fund_clergy.desc",
+      "requirements": {"minStats": {"gold": 10}},
+      "effects": {"stats": {"gold": -10, "legitimacy": 4, "diplomacy": 2}},
+      "mayTrigger": []
+    },
+    {
+      "id": "explore_new_land",
+      "costPA": 1,
+      "titleKey": "action.explore_new_land.title",
+      "descKey": "action.explore_new_land.desc",
+      "requirements": {},
+      "effects": {"stats": {"gold": -5, "legitimacy": 2, "diplomacy": 2}},
+      "mayTrigger": []
+    }
+  ]
+}

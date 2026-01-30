@@ -1,0 +1,34 @@
+{
+  "traits": [
+    {
+      "id": "just",
+      "titleKey": "trait.just.title",
+      "descKey": "trait.just.desc",
+      "modifiers": {"legitimacy": 10, "military": -5}
+    },
+    {
+      "id": "cruel",
+      "titleKey": "trait.cruel.title",
+      "descKey": "trait.cruel.desc",
+      "modifiers": {"military": 10, "diplomacy": -10}
+    },
+    {
+      "id": "devout",
+      "titleKey": "trait.devout.title",
+      "descKey": "trait.devout.desc",
+      "modifiers": {"legitimacy": 10, "gold": -5}
+    },
+    {
+      "id": "diplomat",
+      "titleKey": "trait.diplomat.title",
+      "descKey": "trait.diplomat.desc",
+      "modifiers": {"diplomacy": 10, "military": -5}
+    },
+    {
+      "id": "ambitious",
+      "titleKey": "trait.ambitious.title",
+      "descKey": "trait.ambitious.desc",
+      "modifiers": {"military": 5, "gold": 5, "legitimacy": -5}
+    }
+  ]
+}

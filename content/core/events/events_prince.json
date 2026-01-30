@@ -1,0 +1,89 @@
+{
+  "events": [
+    {
+      "id": "event_prince_tutor",
+      "stage": "prince",
+      "priority": 90,
+      "trigger": {
+        "turnAtLeast": 1
+      },
+      "image": "assets/images/events/court.png",
+      "titleKey": "event.prince.tutor.title",
+      "textKey": "event.prince.tutor.text",
+      "choices": [
+        {
+          "textKey": "event.prince.tutor.choice1",
+          "effects": {"stats": {"diplomacy": 10}}
+        },
+        {
+          "textKey": "event.prince.tutor.choice2",
+          "effects": {"stats": {"military": 10}}
+        }
+      ]
+    },
+    {
+      "id": "event_prince_hunt",
+      "stage": "prince",
+      "priority": 60,
+      "trigger": {
+        "random": true,
+        "turnAtLeast": 2
+      },
+      "image": "assets/images/events/hunt.png",
+      "titleKey": "event.prince.hunt.title",
+      "textKey": "event.prince.hunt.text",
+      "choices": [
+        {
+          "textKey": "event.prince.hunt.choice1",
+          "effects": {"flagsSet": ["trait_just"], "stats": {"legitimacy": 5}}
+        },
+        {
+          "textKey": "event.prince.hunt.choice2",
+          "effects": {"flagsSet": ["trait_cruel"], "stats": {"military": 5}}
+        }
+      ]
+    },
+    {
+      "id": "event_prince_study",
+      "stage": "prince",
+      "priority": 50,
+      "trigger": {
+        "turnAtLeast": 3
+      },
+      "image": "assets/images/events/market.png",
+      "titleKey": "event.prince.study.title",
+      "textKey": "event.prince.study.text",
+      "choices": [
+        {
+          "textKey": "event.prince.study.choice1",
+          "effects": {"stats": {"gold": 15}}
+        },
+        {
+          "textKey": "event.prince.study.choice2",
+          "effects": {"stats": {"legitimacy": 10}}
+        }
+      ]
+    },
+    {
+      "id": "event_prince_dissent",
+      "stage": "prince",
+      "priority": 40,
+      "trigger": {
+        "maxStat": {"legitimacy": 40}
+      },
+      "image": "assets/images/events/conspiracy.png",
+      "titleKey": "event.prince.dissent.title",
+      "textKey": "event.prince.dissent.text",
+      "choices": [
+        {
+          "textKey": "event.prince.dissent.choice1",
+          "effects": {"stats": {"legitimacy": 5}}
+        },
+        {
+          "textKey": "event.prince.dissent.choice2",
+          "effects": {"stats": {"legitimacy": -5}}
+        }
+      ]
+    }
+  ]
+}

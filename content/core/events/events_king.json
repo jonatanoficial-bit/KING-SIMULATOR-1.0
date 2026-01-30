@@ -1,0 +1,225 @@
+{
+  "events": [
+    {
+      "id": "event_succession",
+      "stage": "king",
+      "priority": 100,
+      "trigger": {
+        "flag": "succession_crisis"
+      },
+      "image": "assets/images/events/succession.png",
+      "titleKey": "event.succession.title",
+      "textKey": "event.succession.text",
+      "choices": [
+        {
+          "textKey": "event.succession.choice1",
+          "effects": {"stats": {"legitimacy": 5, "diplomacy": 2}, "flagsSet": ["heir_prepared"]}
+        },
+        {
+          "textKey": "event.succession.choice2",
+          "effects": {"stats": {"legitimacy": 3, "gold": -5}, "flagsSet": ["power_consolidated"]}
+        },
+        {
+          "textKey": "event.succession.choice3",
+          "effects": {"stats": {"legitimacy": -5}}
+        }
+      ]
+    },
+    {
+      "id": "event_revolt",
+      "stage": "king",
+      "priority": 80,
+      "trigger": {
+        "any": [
+          {"flag": "taxes_raised_once"},
+          {"maxStat": {"legitimacy": 30}}
+        ]
+      },
+      "image": "assets/images/events/revolt.png",
+      "titleKey": "event.revolt.title",
+      "textKey": "event.revolt.text",
+      "choices": [
+        {
+          "textKey": "event.revolt.choice1",
+          "effects": {"stats": {"military": -5, "legitimacy": -5}}
+        },
+        {
+          "textKey": "event.revolt.choice2",
+          "effects": {"stats": {"gold": -10, "legitimacy": 5}}
+        }
+      ]
+    },
+    {
+      "id": "event_court_meeting",
+      "stage": "king",
+      "priority": 70,
+      "trigger": {
+        "flag": "law_pass_requested"
+      },
+      "image": "assets/images/events/court.png",
+      "titleKey": "event.court_meeting.title",
+      "textKey": "event.court_meeting.text",
+      "choices": [
+        {
+          "textKey": "event.court_meeting.choice1",
+          "effects": {"stats": {"legitimacy": 5, "gold": -5}}
+        },
+        {
+          "textKey": "event.court_meeting.choice2",
+          "effects": {"stats": {"legitimacy": -2, "diplomacy": 2}}
+        }
+      ]
+    },
+    {
+      "id": "event_war",
+      "stage": "king",
+      "priority": 60,
+      "trigger": {
+        "any": [
+          {"flag": "war_declaration"},
+          {"random": true, "turnAtLeast": 5}
+        ]
+      },
+      "image": "assets/images/events/war.png",
+      "titleKey": "event.war.title",
+      "textKey": "event.war.text",
+      "choices": [
+        {
+          "textKey": "event.war.choice1",
+          "effects": {"stats": {"military": -5, "legitimacy": 5}, "flagsSet": ["in_war"]}
+        },
+        {
+          "textKey": "event.war.choice2",
+          "effects": {"stats": {"diplomacy": 5, "legitimacy": -2}, "flagsSet": ["avoided_war"]}
+        }
+      ]
+    },
+    {
+      "id": "event_trade",
+      "stage": "king",
+      "priority": 60,
+      "trigger": {
+        "flag": "trade_proposal"
+      },
+      "image": "assets/images/events/trade.png",
+      "titleKey": "event.trade.title",
+      "textKey": "event.trade.text",
+      "choices": [
+        {
+          "textKey": "event.trade.choice1",
+          "effects": {"stats": {"gold": 15, "diplomacy": -2}}
+        },
+        {
+          "textKey": "event.trade.choice2",
+          "effects": {"stats": {"legitimacy": 2}}
+        }
+      ]
+    },
+    {
+      "id": "event_diplomacy",
+      "stage": "king",
+      "priority": 55,
+      "trigger": {
+        "flag": "alliance_offer"
+      },
+      "image": "assets/images/events/diplomacy.png",
+      "titleKey": "event.diplomacy.title",
+      "textKey": "event.diplomacy.text",
+      "choices": [
+        {
+          "textKey": "event.diplomacy.choice1",
+          "effects": {"stats": {"diplomacy": 10, "military": -5}}
+        },
+        {
+          "textKey": "event.diplomacy.choice2",
+          "effects": {"stats": {"legitimacy": -3}}
+        }
+      ]
+    },
+    {
+      "id": "event_tax",
+      "stage": "king",
+      "priority": 50,
+      "trigger": {
+        "random": true,
+        "turnAtLeast": 6
+      },
+      "image": "assets/images/events/tax.png",
+      "titleKey": "event.tax.title",
+      "textKey": "event.tax.text",
+      "choices": [
+        {
+          "textKey": "event.tax.choice1",
+          "effects": {"stats": {"gold": 20, "legitimacy": -5}}
+        },
+        {
+          "textKey": "event.tax.choice2",
+          "effects": {"stats": {"legitimacy": 5, "gold": -15}}
+        }
+      ]
+    },
+    {
+      "id": "event_market",
+      "stage": "king",
+      "priority": 45,
+      "trigger": {
+        "flag": "trade_route_signed"
+      },
+      "image": "assets/images/events/market.png",
+      "titleKey": "event.market.title",
+      "textKey": "event.market.text",
+      "choices": [
+        {
+          "textKey": "event.market.choice1",
+          "effects": {"stats": {"gold": 10, "diplomacy": -3}}
+        },
+        {
+          "textKey": "event.market.choice2",
+          "effects": {"stats": {"diplomacy": 5, "gold": 5}}
+        }
+      ]
+    },
+    {
+      "id": "event_conspiracy",
+      "stage": "king",
+      "priority": 50,
+      "trigger": {
+        "flag": "noble_spy"
+      },
+      "image": "assets/images/events/conspiracy.png",
+      "titleKey": "event.conspiracy.title",
+      "textKey": "event.conspiracy.text",
+      "choices": [
+        {
+          "textKey": "event.conspiracy.choice1",
+          "effects": {"stats": {"legitimacy": -2, "diplomacy": -5, "military": 2}}
+        },
+        {
+          "textKey": "event.conspiracy.choice2",
+          "effects": {"stats": {"gold": 10, "legitimacy": -5}, "flagsSet": ["blackmail_used"]}
+        }
+      ]
+    },
+    {
+      "id": "event_tournament",
+      "stage": "king",
+      "priority": 40,
+      "trigger": {
+        "flag": "tournament_hosted"
+      },
+      "image": "assets/images/events/court.png",
+      "titleKey": "event.tournament.title",
+      "textKey": "event.tournament.text",
+      "choices": [
+        {
+          "textKey": "event.tournament.choice1",
+          "effects": {"stats": {"gold": -15, "legitimacy": 8, "military": 3}}
+        },
+        {
+          "textKey": "event.tournament.choice2",
+          "effects": {"stats": {}}
+        }
+      ]
+    }
+  ]
+}
