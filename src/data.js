@@ -503,6 +503,81 @@ export const warActions = {
   ]
 };
 
+
+// --- ECONOMY SYSTEM (Part 4) ---
+export const economyConfig = {
+  inflationImpactOnIncome: 0.004, // each 1 inflation reduces income by this factor
+  debtInterestRate: 0.06,
+  famineFoodLoss: 12
+};
+
+export const economyActions = {
+  actions: [
+    {
+      id: "econ_issue_bonds",
+      costPA: 1,
+      titleKey: "econ.issue_bonds.title",
+      descKey: "econ.issue_bonds.desc",
+      requirements: {},
+      effects: {
+        stats: { gold: +25, legitimacy: -2 },
+        economy: { debt: +25, inflation: +3, stability: -2 },
+        factions: { merchants: +2 }
+      }
+    },
+    {
+      id: "econ_subsidize_grain",
+      costPA: 1,
+      titleKey: "econ.subsidize_grain.title",
+      descKey: "econ.subsidize_grain.desc",
+      requirements: { minStats: { gold: 10 } },
+      effects: {
+        stats: { gold: -12, legitimacy: +2 },
+        economy: { food: +12, stability: +3, inflation: -1 },
+        regionsMeta: { unrest: -2 }
+      },
+      mayTrigger: ["event_econ_famine"]
+    },
+    {
+      id: "econ_open_markets",
+      costPA: 1,
+      titleKey: "econ.open_markets.title",
+      descKey: "econ.open_markets.desc",
+      requirements: { minStats: { diplomacy: 20 } },
+      effects: {
+        stats: { diplomacy: +2, gold: +8 },
+        economy: { trade: +6, inflation: +1, stability: +1 },
+        factions: { merchants: +4 }
+      },
+      mayTrigger: ["event_econ_guild"]
+    },
+    {
+      id: "econ_impose_embargo",
+      costPA: 1,
+      titleKey: "econ.impose_embargo.title",
+      descKey: "econ.impose_embargo.desc",
+      requirements: { minStats: { diplomacy: 25 } },
+      effects: {
+        stats: { diplomacy: -2, legitimacy: +1 },
+        economy: { trade: -5, inflation: +2, stability: -2 },
+        factions: { merchants: -3 }
+      }
+    },
+    {
+      id: "econ_austerity",
+      costPA: 1,
+      titleKey: "econ.austerity.title",
+      descKey: "econ.austerity.desc",
+      requirements: {},
+      effects: {
+        stats: { legitimacy: -2 },
+        economy: { inflation: -3, stability: +2 }
+      },
+      mayTrigger: ["event_econ_inflation"]
+    }
+  ]
+};
+
 export const endings = {
   victory: [
     {
@@ -537,7 +612,7 @@ export const endings = {
     },
     {
       id: "bankrupt",
-      requirements: { maxStats: { gold: -50 } },
+      requirements: { any: [ { maxStats: { gold: -50 } }, { minEconomy: { debt: 300 } }, { maxEconomy: { stability: 0 } }, { maxEconomy: { food: 0 } } ] } },
       titleKey: "ending.bankrupt.title",
       textKey: "ending.bankrupt.text",
       image: "assets/images/endings/defeat.png"

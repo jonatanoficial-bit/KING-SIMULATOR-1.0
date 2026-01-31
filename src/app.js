@@ -15,7 +15,9 @@ import {
   arcs as arcsData,
   endings as endingsData,
   warConfig as warConfigData,
-  warActions as warActionsData
+  warActions as warActionsData,
+  economyConfig as economyConfigData,
+  economyActions as economyActionsData
 } from './data.js';
 
 const appEl = document.getElementById('app');
@@ -50,7 +52,9 @@ const CORE = {
   arc: deepClone(arcsData),
   endings: deepClone(endingsData),
   warConfig: deepClone(warConfigData),
-  warActions: deepClone(warActionsData.actions)
+  warActions: deepClone(warActionsData.actions),
+  economyConfig: deepClone(economyConfigData),
+  economyActions: deepClone(economyActionsData.actions)
 };
 
 
@@ -100,6 +104,53 @@ const WAR_EVENTS = [
 // merge war events into core
 CORE.events.push(...WAR_EVENTS);
 
+// Economy events
+
+const ECON_EVENTS = [
+  {
+    id: "event_econ_famine",
+    stage: "king",
+    priority: 88,
+    trigger: { random: true, turnAtLeast: 5 },
+    image: "assets/images/events/market.png",
+    titleKey: "event.econ.famine.title",
+    textKey: "event.econ.famine.text",
+    choices: [
+      { textKey: "event.econ.famine.choice1", effects: { stats: { gold: -12, legitimacy: +2 }, economy: { food: +12, inflation: -1, stability: +2 } } },
+      { textKey: "event.econ.famine.choice2", effects: { economy: { food: -12, inflation: +2, stability: -3 }, regionsMeta: { unrest: +3 } } }
+    ]
+  },
+  {
+    id: "event_econ_guild",
+    stage: "king",
+    priority: 70,
+    trigger: { random: true, turnAtLeast: 6 },
+    image: "assets/images/events/market.png",
+    titleKey: "event.econ.guild.title",
+    textKey: "event.econ.guild.text",
+    choices: [
+      { textKey: "event.econ.guild.choice1", effects: { economy: { trade: +6, stability: +1 }, factions: { merchants: +6 }, stats: { legitimacy: -1 } } },
+      { textKey: "event.econ.guild.choice2", effects: { economy: { stability: -2 }, factions: { merchants: -4 }, stats: { legitimacy: +1 } } }
+    ]
+  },
+  {
+    id: "event_econ_inflation",
+    stage: "king",
+    priority: 92,
+    trigger: { any: [{ random: true, turnAtLeast: 7 }, { minEconomy: { inflation: 15 } }] },
+    image: "assets/images/events/court.png",
+    titleKey: "event.econ.inflation.title",
+    textKey: "event.econ.inflation.text",
+    choices: [
+      { textKey: "event.econ.inflation.choice1", effects: { economy: { inflation: -4, stability: +2 }, stats: { legitimacy: -1 } } },
+      { textKey: "event.econ.inflation.choice2", effects: { stats: { gold: +15, legitimacy: -3 }, economy: { inflation: +4, debt: +10, stability: -2 } } }
+    ]
+  }
+];
+
+CORE.events.push(...ECON_EVENTS);
+
+
 const STORAGE_KEY = 'mk2_save_v1';
 
 let state = null;
@@ -120,6 +171,7 @@ function newGame() {
     regions: CORE.regions.map(r => ({ ...r })),
     diplomacyMeta: { alliances: 0, wars: 0, rivalries: 0 },
     war: { active: false, playerPower: 50, enemyPower: 55, morale: 50, days: 0 },
+    economy: { inflation: 0, debt: 0, food: 55, trade: 10, stability: 55 },
     eventQueue: [],
     lastActionId: null,
     summary: []
@@ -194,6 +246,16 @@ function meetsRequirements(req = {}) {
     }
   }
 
+// economy requirements
+  if (req.minEconomy) {
+    const e = state.economy;
+    for (const [k,v] of Object.entries(req.minEconomy)) if ((e[k] ?? 0) < v) return false;
+  }
+  if (req.maxEconomy) {
+    const e = state.economy;
+    for (const [k,v] of Object.entries(req.maxEconomy)) if ((e[k] ?? 0) > v) return false;
+  }
+
 // war requirements
   if (req.minWar) {
     if (typeof req.minWar.enemyPower === 'number' && state.war.enemyPower < req.minWar.enemyPower) return false;
@@ -254,6 +316,16 @@ function applyEffects(effects = {}) {
     }
   }
 
+  if (effects.economy) {
+    const e = effects.economy;
+    const eco = state.economy;
+    if (typeof e.inflation === 'number') eco.inflation = clamp(eco.inflation + e.inflation, -10, 50);
+    if (typeof e.debt === 'number') eco.debt = clamp(eco.debt + e.debt, 0, 500);
+    if (typeof e.food === 'number') eco.food = clamp(eco.food + e.food, 0, 100);
+    if (typeof e.trade === 'number') eco.trade = clamp(eco.trade + e.trade, 0, 100);
+    if (typeof e.stability === 'number') eco.stability = clamp(eco.stability + e.stability, 0, 100);
+  }
+
   // Regions meta: for MVP we apply gently across all, plus a few special hooks
   if (effects.regionsMeta) {
     const meta = effects.regionsMeta;
@@ -284,7 +356,9 @@ function incomeForTurn() {
     const stability = 1 - (r.unrest / 140); // unrest reduces
     return sum + Math.round((r.prosperity / 12) * stability);
   }, 0);
-  return base + regionIncome;
+  const inflationFactor = 1 - (Math.max(0, state.economy.inflation) * CORE.economyConfig.inflationImpactOnIncome);
+  const tradeBonus = Math.round(state.economy.trade / 10);
+  return Math.round((base + regionIncome + tradeBonus) * inflationFactor);
 }
 
 function triggerEventsForTurn() {
@@ -307,6 +381,8 @@ function triggerEventsForTurn() {
       if (trg.any) req.any = trg.any;
       if (trg.all) req.all = trg.all;
       if (trg.minStats) req.minStats = trg.minStats;
+      if (trg.minEconomy) req.minEconomy = trg.minEconomy;
+      if (trg.maxEconomy) req.maxEconomy = trg.maxEconomy;
       if (trg.maxStat) req.maxStats = trg.maxStat;
       if (trg.turnAtLeast) req.turnAtLeast = trg.turnAtLeast;
       if (trg.turnAtMost) req.turnAtMost = trg.turnAtMost;
@@ -364,6 +440,21 @@ function applyWarAction(action) {
   render();
 }
 
+
+function applyEconomyAction(action) {
+  if (state.pa < action.costPA) return;
+  if (!meetsRequirements(action.requirements)) return;
+
+  state.pa -= action.costPA;
+  applyEffects({ ...(action.effects || {}), flagsSet: action.flagsSet || [] });
+
+  if (action.mayTrigger && action.mayTrigger.length) queueSpecificEvent(action.mayTrigger[0]);
+
+  state.summary.push({ turn: state.turn, type: 'economy', id: action.id });
+  saveGame();
+  render();
+}
+
 function applyAction(action) {
   if (state.pa < action.costPA) return;
   if (!meetsRequirements(action.requirements)) return;
@@ -412,6 +503,19 @@ function endTurn() {
 
   // income & decay
   state.stats.gold += incomeForTurn();
+  // economy: interest, food, stability
+  const eco = state.economy;
+  const interest = Math.round(eco.debt * CORE.economyConfig.debtInterestRate);
+  if (interest > 0) state.stats.gold -= interest;
+  // basic food consumption per turn
+  eco.food = clamp(eco.food - 4, 0, 100);
+  if (eco.food < 20) { eco.stability = clamp(eco.stability - 3, 0, 100); state.stats.legitimacy -= 2; }
+  if (eco.debt > 200) { eco.stability = clamp(eco.stability - 2, 0, 100); }
+  if (eco.inflation > 15) { eco.stability = clamp(eco.stability - 2, 0, 100); }
+  if (eco.stability > 70 && eco.food > 40) { state.stats.legitimacy += 1; }
+  // collapse triggers
+  if (eco.stability <= 0) state.stats.legitimacy = 0; // will trigger overthrow
+
   for (const [k, v] of Object.entries(CORE.rules.decay)) {
     state.stats[k] = (state.stats[k] ?? 0) + v;
   }
@@ -705,6 +809,7 @@ function renderTopHUD(container) {
   tabs.appendChild(tabBtn('actions', 'ui.tab.actions'));
   tabs.appendChild(tabBtn('realm', 'ui.tab.realm'));
   tabs.appendChild(tabBtn('council', 'ui.tab.council'));
+  tabs.appendChild(tabBtn('economy', 'ui.tab.economy'));
   if (state.war.active || state.flags.in_war) tabs.appendChild(tabBtn('war', 'ui.tab.war'));
   container.appendChild(tabs);
 }
@@ -804,6 +909,60 @@ function renderCouncil(container) {
   container.appendChild(wrap);
 }
 
+
+
+function renderEconomy(container) {
+  const wrap = el('div', 'panel');
+  wrap.appendChild(el('div', 'panelTitle', t('ui.econ_status')));
+
+  const grid = el('div', 'regionGrid');
+  const mk = (label, value) => {
+    const c = el('div', 'regionCard');
+    c.appendChild(el('div', 'regionName', label));
+    const row = el('div', 'miniRow');
+    row.appendChild(el('div', 'miniLabel', label));
+    row.appendChild(el('div', 'miniValue', String(value)));
+    c.appendChild(row);
+    return c;
+  };
+
+  const eco = state.economy;
+  const c1 = el('div', 'regionCard');
+  c1.appendChild(el('div', 'regionName', t('ui.inflation')));
+  c1.appendChild(el('div', 'miniRow')).innerHTML = `<div class="miniLabel">${t('ui.inflation')}</div><div class="miniValue">${eco.inflation}</div>`;
+  const c2 = el('div', 'regionCard');
+  c2.appendChild(el('div', 'regionName', t('ui.debt')));
+  c2.appendChild(el('div', 'miniRow')).innerHTML = `<div class="miniLabel">${t('ui.debt')}</div><div class="miniValue">${eco.debt}</div>`;
+  const c3 = el('div', 'regionCard');
+  c3.appendChild(el('div', 'regionName', t('ui.food')));
+  c3.appendChild(el('div', 'miniRow')).innerHTML = `<div class="miniLabel">${t('ui.food')}</div><div class="miniValue">${eco.food}</div>`;
+  const c4 = el('div', 'regionCard');
+  c4.appendChild(el('div', 'regionName', t('ui.trade')));
+  c4.appendChild(el('div', 'miniRow')).innerHTML = `<div class="miniLabel">${t('ui.trade')}</div><div class="miniValue">${eco.trade}</div>`;
+
+  grid.appendChild(c1); grid.appendChild(c2); grid.appendChild(c3); grid.appendChild(c4);
+  wrap.appendChild(grid);
+
+  wrap.appendChild(el('div', 'muted', t('ui.econ_hint')));
+
+  wrap.appendChild(el('div', 'panelTitle', locale === 'pt' ? 'Ações Econômicas' : 'Economic Actions'));
+  const list = el('div', 'actionList');
+  CORE.economyActions.forEach(a => {
+    const enabled = state.pa >= a.costPA && meetsRequirements(a.requirements);
+    const item = el('button', 'actionCard');
+    item.classList.toggle('disabled', !enabled);
+    item.addEventListener('click', () => enabled && applyEconomyAction(a));
+    const head = el('div', 'actionHead');
+    head.appendChild(el('div', 'actionName', t(a.titleKey)));
+    head.appendChild(el('div', 'badge', `-${a.costPA} PA`));
+    item.appendChild(head);
+    item.appendChild(el('div', 'actionDesc', t(a.descKey)));
+    list.appendChild(item);
+  });
+  wrap.appendChild(list);
+
+  container.appendChild(wrap);
+}
 
 function renderWar(container) {
   const wrap = el('div', 'panel');
@@ -929,6 +1088,7 @@ function renderGame() {
   // main
   if (state.ui.tab === 'actions') renderActions(root);
   else if (state.ui.tab === 'realm') renderRealm(root);
+  else if (state.ui.tab === 'economy') renderEconomy(root);
   else if (state.ui.tab === 'war') renderWar(root);
   else renderCouncil(root);
 

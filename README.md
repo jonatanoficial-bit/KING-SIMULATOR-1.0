@@ -46,4 +46,11 @@ Core content is embedded in `/src/data.js` and `/src/locales.js` so the game wor
 Future steps can switch to loading JSON packs from `/content/` without changing the core engine.
 
 ---
-Version: `v1.2 (Part 3: War)`
+Version: `v1.3 (Part 4: Economy + Fix)`
+
+## What’s new in Part 4
+- Economy tab with Inflation, Debt, Food, Trade and Stability.
+- Economic actions (Bonds, Grain subsidy, Open markets, Embargo, Austerity).
+- Economic events (Famine, Guild demands, Inflation spike).
+- Bankrupt ending also triggers from high debt / zero food / zero stability.
+
