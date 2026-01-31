@@ -22,6 +22,30 @@ import {
 
 const appEl = document.getElementById('app');
 
+function showFatal(err) {
+  try {
+    const msg = (err && (err.stack || err.message)) ? (err.stack || err.message) : String(err);
+    console.error(err);
+    if (appEl) {
+      appEl.innerHTML = `
+        <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;">
+          <div style="max-width:900px;width:100%;border-radius:18px;border:1px solid rgba(255,255,255,0.14);background:rgba(15,18,28,0.85);color:#f0e6d2;padding:18px;box-shadow:0 20px 80px rgba(0,0,0,0.55);">
+            <div style="font-weight:900;font-size:18px;margin-bottom:8px;">⚠️ Erro ao iniciar o jogo</div>
+            <div style="opacity:0.9;margin-bottom:10px;">O jogo encontrou um erro de JavaScript. Copie o texto abaixo e me envie para eu corrigir.</div>
+            <pre style="white-space:pre-wrap;background:rgba(255,255,255,0.06);padding:12px;border-radius:14px;overflow:auto;border:1px solid rgba(255,255,255,0.10);">${msg}</pre>
+            <div style="opacity:0.8;margin-top:10px;font-size:12px;">Dica: no GitHub Pages, confirme que estes arquivos estão na raiz do repositório: <b>index.html</b>, <b>style.css</b>, pasta <b>src/</b>.</div>
+          </div>
+        </div>`;
+    }
+  } catch (e) {
+    console.error("Fatal error (and failed to render overlay):", e, err);
+  }
+}
+
+window.addEventListener('error', (e) => showFatal(e.error || e.message));
+window.addEventListener('unhandledrejection', (e) => showFatal(e.reason));
+
+
 let locale = 'en';
 
 function t(key, vars = {}) {
@@ -171,6 +195,7 @@ function newGame() {
     regions: CORE.regions.map(r => ({ ...r })),
     diplomacyMeta: { alliances: 0, wars: 0, rivalries: 0 },
     war: { active: false, playerPower: 50, enemyPower: 55, morale: 50, days: 0 },
+    dynasty: { age: 16, spouse: null, heir: null, children: [], prestige: 50, stress: 10, house: null },
     economy: { inflation: 0, debt: 0, food: 55, trade: 10, stability: 55 },
     eventQueue: [],
     lastActionId: null,
@@ -501,6 +526,24 @@ function endTurn() {
     setToast('👑 ' + (locale === 'pt' ? 'Você agora é Rei.' : 'You are now King.'));
   }
 
+  // dynasty aging
+  state.dynasty.age += 1;
+  state.dynasty.stress = clamp(state.dynasty.stress + (state.war.active ? 2 : 0) + (state.stats.gold < 0 ? 1 : 0), 0, 100);
+  // chance of child each turn if married and fewer than 4 children
+  if (state.dynasty.spouse && state.dynasty.children.length < 4) {
+    const chance = 0.18;
+    if (Math.random() < chance) {
+      const child = { name: randomName(), age: 0, trait: Math.random() < 0.5 ? 'bright' : 'sturdy' };
+      state.dynasty.children.push(child);
+      state.dynasty.prestige = clamp(state.dynasty.prestige + 2, 0, 100);
+      setToast(locale === 'pt' ? `Nasceu um filho: ${child.name}` : `A child was born: ${child.name}`);
+      // auto set heir if none
+      if (!state.dynasty.heir) { state.dynasty.heir = { name: child.name, age: 0, skill: 0 }; state.flags.heir_set = true; }
+    }
+  }
+  // children age
+  state.dynasty.children.forEach(c => c.age += 1);
+
   // income & decay
   state.stats.gold += incomeForTurn();
   // economy: interest, food, stability
@@ -592,6 +635,7 @@ function evaluateEndings() {
 }
 
 function currentEvent() {
+  if (state.__tempEvent) return state.__tempEvent;
   const id = state.eventQueue[0];
   if (!id) return null;
   return CORE.events.find(e => e.id === id) || null;
@@ -604,12 +648,36 @@ function chooseEventOption(choice) {
   // requirements for choices (optional)
   if (choice.requirements && !meetsRequirements(choice.requirements)) return;
 
+  // Temporary Dynasty modal handling
+  if (e.id && e.id.startsWith('dynasty_')) {
+    const pick = choice.effects?.__dynastyPick;
+    if (pick && pick.mode !== 'cancel') {
+      if (pick.mode === 'marry') {
+        state.dynasty.spouse = { name: pick.candidate.name, prestige: pick.candidate.prestige, diplomacy: pick.candidate.diplomacy };
+        state.dynasty.prestige = clamp(state.dynasty.prestige + pick.candidate.prestige, 0, 100);
+        state.stats.diplomacy += Math.floor(pick.candidate.diplomacy / 2);
+        setToast(locale === 'pt' ? 'Casamento arranjado.' : 'Marriage arranged.');
+      } else if (pick.mode === 'heir') {
+        state.dynasty.heir = { name: pick.candidate.name, age: 10, skill: 0 };
+        state.dynasty.prestige = clamp(state.dynasty.prestige + 2, 0, 100);
+        setToast(locale === 'pt' ? 'Herdeiro definido.' : 'Heir appointed.');
+      }
+    }
+    // Close temp event and return
+    state.__tempEvent = null;
+    saveGame();
+    render();
+    return;
+  }
+
+  // Normal event effects
   applyEffects(choice.effects || {});
   // activate war mode
   if (state.flags.in_war) state.war.active = true;
+
   state.summary.push({ turn: state.turn, type: 'event', id: e.id });
 
-  // pop
+  // pop from queue
   state.eventQueue.shift();
 
   // after event, check endings
@@ -1016,6 +1084,127 @@ function renderWar(container) {
   container.appendChild(wrap);
 }
 
+
+function renderDynasty(container) {
+  const wrap = el('div', 'panel');
+  wrap.appendChild(el('div', 'panelTitle', t('ui.tab.dynasty')));
+
+  const card = el('div', 'regionCard');
+  const title = el('div', 'regionName', locale === 'pt' ? 'Casa Real' : 'Royal House');
+  card.appendChild(title);
+
+  const rows = el('div', '');
+  const line = (k, v) => {
+    const r = el('div', 'miniRow');
+    r.appendChild(el('div', 'miniLabel', k));
+    r.appendChild(el('div', 'miniValue', v));
+    return r;
+  };
+
+  card.appendChild(line(locale === 'pt' ? 'Idade' : 'Age', `${state.dynasty.age}`));
+  card.appendChild(line(locale === 'pt' ? 'Prestígio' : 'Prestige', `${Math.round(state.dynasty.prestige)}`));
+  card.appendChild(line(locale === 'pt' ? 'Estresse' : 'Stress', `${Math.round(state.dynasty.stress)}`));
+  card.appendChild(line(locale === 'pt' ? 'Cônjuge' : 'Spouse', state.dynasty.spouse ? state.dynasty.spouse.name : (locale === 'pt' ? 'Nenhum' : 'None')));
+  card.appendChild(line(locale === 'pt' ? 'Herdeiro(a)' : 'Heir', state.dynasty.heir ? state.dynasty.heir.name : (locale === 'pt' ? 'Indefinido' : 'Unset')));
+
+  // Children list
+  const kids = el('div', 'tipList');
+  const kidsTitle = el('div', 'tip', (locale === 'pt' ? 'Filhos:' : 'Children:') + ` ${state.dynasty.children.length}`);
+  kids.appendChild(kidsTitle);
+  state.dynasty.children.slice(0, 6).forEach(ch => {
+    kids.appendChild(el('div', 'tip', `• ${ch.name} (${locale === 'pt' ? 'idade' : 'age'} ${ch.age})`));
+  });
+  if (state.dynasty.children.length > 6) kids.appendChild(el('div', 'tip', locale === 'pt' ? '• ...' : '• ...'));
+  card.appendChild(kids);
+
+  wrap.appendChild(card);
+
+  // Dynasty actions
+  wrap.appendChild(el('div', 'panelTitle', locale === 'pt' ? 'Ações Dinásticas' : 'Dynasty Actions'));
+  const list = el('div', 'actionList');
+
+  const actions = [
+    { id: 'dynasty_marry', costPA: 1, titleKey: 'dynasty.marry.title', descKey: 'dynasty.marry.desc', req: { }, run: () => openDynastyChoice('marry') },
+    { id: 'dynasty_name_heir', costPA: 1, titleKey: 'dynasty.heir.title', descKey: 'dynasty.heir.desc', req: { }, run: () => openDynastyChoice('heir') },
+    { id: 'dynasty_hold_ceremony', costPA: 1, titleKey: 'dynasty.ceremony.title', descKey: 'dynasty.ceremony.desc', req: { minStats: { gold: 10 } }, run: () => dynastyCeremony() },
+    { id: 'dynasty_educate', costPA: 1, titleKey: 'dynasty.educate.title', descKey: 'dynasty.educate.desc', req: { }, run: () => educateHeir() }
+  ];
+
+  actions.forEach(a => {
+    const enabled = state.pa >= a.costPA && meetsRequirements(a.req);
+    const item = el('button', 'actionCard');
+    item.classList.toggle('disabled', !enabled);
+    item.addEventListener('click', () => {
+      if (!enabled) return;
+      state.pa -= a.costPA;
+      a.run();
+      saveGame();
+      render();
+    });
+
+    const head = el('div', 'actionHead');
+    head.appendChild(el('div', 'actionName', t(a.titleKey)));
+    head.appendChild(el('div', 'badge', `-${a.costPA} PA`));
+    item.appendChild(head);
+    item.appendChild(el('div', 'actionDesc', t(a.descKey)));
+    list.appendChild(item);
+  });
+
+  wrap.appendChild(list);
+  container.appendChild(wrap);
+}
+
+function randomName() {
+  const ptNames = ["Afonso","Beatriz","Isabel","Henrique","Joana","Martim","Leonor","Duarte","Tomás","Inês"];
+  const enNames = ["Edward","Eleanor","Henry","Isabella","Arthur","Matilda","Richard","Anne","William","Catherine"];
+  const pool = (locale === 'pt') ? ptNames : enNames;
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+
+function openDynastyChoice(mode) {
+  // Build a lightweight choice modal using the existing event modal system
+  const choices = Array.from({ length: 3 }).map(() => ({ name: randomName(), prestige: 4 + Math.floor(Math.random()*7), diplomacy: 2 + Math.floor(Math.random()*6) }));
+  const titleKey = mode === 'marry' ? 'dynasty.marry.pick_title' : 'dynasty.heir.pick_title';
+  const textKey  = mode === 'marry' ? 'dynasty.marry.pick_text'  : 'dynasty.heir.pick_text';
+
+  const tempEvent = {
+    id: `dynasty_${mode}_pick`,
+    stage: state.stage,
+    priority: 999,
+    image: mode === 'marry' ? "assets/images/events/diplomacy.png" : "assets/images/events/succession.png",
+    titleKey,
+    textKey,
+    choices: choices.map(c => ({
+      textKey: null,
+      __label: `${c.name} (+${c.prestige} ${locale==='pt'?'prestígio':'prestige'})`,
+      effects: { __dynastyPick: { mode, candidate: c } }
+    })).concat([{
+      textKey: null,
+      __label: locale === 'pt' ? 'Cancelar' : 'Cancel',
+      effects: { __dynastyPick: { mode: 'cancel' } }
+    }])
+  };
+
+  state.__tempEvent = tempEvent;
+}
+
+function dynastyCeremony() {
+  // ceremony increases legitimacy and prestige, costs gold
+  state.stats.gold -= 10;
+  state.stats.legitimacy += 4;
+  state.dynasty.prestige = clamp(state.dynasty.prestige + 6, 0, 100);
+  state.factions.find(f=>f.id==='nobility').loyalty = clamp(state.factions.find(f=>f.id==='nobility').loyalty + 2, 0, 100);
+  setToast(locale === 'pt' ? 'Cerimônia realizada.' : 'Ceremony held.');
+}
+
+function educateHeir() {
+  if (!state.dynasty.heir) { setToast(locale === 'pt' ? 'Defina um herdeiro primeiro.' : 'Set an heir first.'); return; }
+  state.dynasty.heir.skill = (state.dynasty.heir.skill ?? 0) + 1;
+  state.stats.diplomacy += 1;
+  state.dynasty.prestige = clamp(state.dynasty.prestige + 1, 0, 100);
+  setToast(locale === 'pt' ? 'Herdeiro educado.' : 'Heir educated.');
+}
+
 function renderEventModal(container) {
   const e = currentEvent();
   if (!e) return;
@@ -1036,7 +1225,8 @@ function renderEventModal(container) {
   const choices = el('div', 'choiceList');
   (e.choices || []).forEach(ch => {
     const ok = !ch.requirements || meetsRequirements(ch.requirements);
-    const b = button(t(ch.textKey), () => ok && chooseEventOption(ch), 'btn');
+    const label = ch.textKey ? t(ch.textKey) : (ch.__label || '...');
+    const b = button(label, () => ok && chooseEventOption(ch), 'btn');
     if (!ok) b.classList.add('disabled');
     choices.appendChild(b);
   });
@@ -1118,11 +1308,15 @@ function render() {
 }
 
 // Boot
-if (!loadGame()) {
-  newGame();
-} else {
-  // when loaded, go straight to game
-  if (!state.nation) state.ui.screen = 'lang';
-  else state.ui.screen = 'game';
+try {
+  if (!loadGame()) {
+    newGame();
+  } else {
+    // when loaded, go straight to game
+    if (!state.nation) state.ui.screen = 'lang';
+    else state.ui.screen = 'game';
+  }
+  render();
+} catch (err) {
+  showFatal(err);
 }
-render();

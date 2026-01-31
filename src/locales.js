@@ -231,8 +231,21 @@ export const locales = {
     "ending.war_loss.title": "Defeat in War",
     "ending.war_loss.text": "Your armies are broken and your lands seized; exile awaits.",
     "ending.coup.title": "Palace Coup",
-    "ending.coup.text": "The nobility turns against you and seizes the throne in a swift coup."
-  },
+    "ending.coup.text": "The nobility turns against you and seizes the throne in a swift coup.",
+"ui.tab.dynasty": "Dynasty",
+    "dynasty.marry.title": "Arrange Marriage",
+    "dynasty.marry.desc": "Secure a spouse to strengthen diplomacy and prestige.",
+    "dynasty.heir.title": "Name Heir",
+    "dynasty.heir.desc": "Appoint an heir to avoid succession chaos.",
+    "dynasty.ceremony.title": "Hold Royal Ceremony",
+    "dynasty.ceremony.desc": "Spend gold for prestige and legitimacy.",
+    "dynasty.educate.title": "Educate Heir",
+    "dynasty.educate.desc": "Improve your heir's skill and your diplomatic capacity.",
+    "dynasty.marry.pick_title": "Marriage Candidates",
+    "dynasty.marry.pick_text": "Choose a candidate. The choice affects prestige and diplomacy.",
+    "dynasty.heir.pick_title": "Choose an Heir",
+    "dynasty.heir.pick_text": "Select a child or noble to be publicly recognized as heir."
+},
 
   pt: {
     "ui.select_language": "Selecionar Idioma",
@@ -464,6 +477,19 @@ export const locales = {
     "ending.war_loss.title": "Derrota na Guerra",
     "ending.war_loss.text": "Seus exércitos são destruídos e suas terras tomadas; o exílio o aguarda.",
     "ending.coup.title": "Golpe no Palácio",
-    "ending.coup.text": "A nobreza se volta contra você e toma o trono em um golpe rápido."
-  }
+    "ending.coup.text": "A nobreza se volta contra você e toma o trono em um golpe rápido.",
+"ui.tab.dynasty": "Dinastia",
+    "dynasty.marry.title": "Arranjar Casamento",
+    "dynasty.marry.desc": "Garanta um cônjuge para fortalecer diplomacia e prestígio.",
+    "dynasty.heir.title": "Nomear Herdeiro",
+    "dynasty.heir.desc": "Defina um herdeiro para evitar caos sucessório.",
+    "dynasty.ceremony.title": "Realizar Cerimônia Real",
+    "dynasty.ceremony.desc": "Gaste ouro para obter prestígio e legitimidade.",
+    "dynasty.educate.title": "Educar Herdeiro",
+    "dynasty.educate.desc": "Melhore a habilidade do herdeiro e sua capacidade diplomática.",
+    "dynasty.marry.pick_title": "Candidatos ao Casamento",
+    "dynasty.marry.pick_text": "Escolha um candidato. A escolha afeta prestígio e diplomacia.",
+    "dynasty.heir.pick_title": "Escolha um Herdeiro",
+    "dynasty.heir.pick_text": "Selecione uma criança ou nobre para ser reconhecido como herdeiro."
+}
 };

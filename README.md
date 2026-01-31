@@ -46,7 +46,7 @@ Core content is embedded in `/src/data.js` and `/src/locales.js` so the game wor
 Future steps can switch to loading JSON packs from `/content/` without changing the core engine.
 
 ---
-Version: `v1.3 (Part 4: Economy + Fix)`
+Version: `v1.3 (Part 5: Dynasty)`
 
 ## What’s new in Part 4
 - Economy tab with Inflation, Debt, Food, Trade and Stability.
