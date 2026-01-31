@@ -1,4 +1,4 @@
-// Localized strings for Medieval Kingdoms (Part 2: factions + regions + diplomacy meta)
+// Localized strings for Medieval Kingdoms (Part 3: War)
 
 export const locales = {
   en: {
@@ -9,17 +9,22 @@ export const locales = {
     "ui.next": "Next",
     "ui.turn": "Turn",
     "ui.actions_remaining": "Actions remaining: {pa}",
+
     "ui.stats.legitimacy": "Legitimacy",
     "ui.stats.gold": "Gold",
     "ui.stats.military": "Military",
     "ui.stats.diplomacy": "Diplomacy",
+
     "ui.tab.actions": "Actions",
     "ui.tab.realm": "Realm",
     "ui.tab.council": "Council",
+    "ui.tab.war": "War",
     "ui.end_turn": "End Turn",
+
     "ui.game_over": "Game Over",
     "ui.victory": "Victory",
     "ui.play_again": "Play Again",
+
     "ui.diplomacy_meta": "Treaties",
     "ui.alliances": "Alliances",
     "ui.wars": "Wars",
@@ -38,6 +43,14 @@ export const locales = {
     "region.frontier": "Frontier",
     "ui.prosperity": "Prosperity",
     "ui.unrest": "Unrest",
+
+    "ui.war_status": "War Status",
+    "ui.war_power": "Power",
+    "ui.war_enemy": "Enemy",
+    "ui.war_morale": "Morale",
+    "ui.war_progress": "War progress",
+    "ui.war_victory_hint": "Reduce enemy power to 0 to win the war.",
+    "ui.war_defeat_hint": "If your war morale hits 0, your reign may collapse.",
 
     "nation.england.name": "England",
     "nation.england.desc": "A maritime kingdom with strong diplomacy.",
@@ -102,6 +115,15 @@ export const locales = {
     "action.explore_new_land.title": "Explore New Land",
     "action.explore_new_land.desc": "Send explorers to find opportunities.",
 
+    "war.raid.title": "Raid Supply Lines",
+    "war.raid.desc": "Fast raids to weaken the enemy and steal supplies.",
+    "war.siege.title": "Lay Siege",
+    "war.siege.desc": "A costly siege that can break the enemy if you are strong enough.",
+    "war.reinforce.title": "Reinforce Army",
+    "war.reinforce.desc": "Spend gold to reinforce troops and improve your position.",
+    "war.seek_peace.title": "Seek Peace",
+    "war.seek_peace.desc": "Attempt peace talks; success depends on your diplomacy and the war state.",
+
     "event.succession.title": "The King's Illness",
     "event.succession.text": "The King has fallen gravely ill. Courtiers whisper about succession. How will you prepare?",
     "event.succession.choice1": "Prepare the heir with counsel and training.",
@@ -155,6 +177,21 @@ export const locales = {
     "event.prince.dissent.choice1": "Investigate and address concerns.",
     "event.prince.dissent.choice2": "Dismiss it as gossip.",
 
+    "event.war.raid_result.title": "Raid Aftermath",
+    "event.war.raid_result.text": "Your raiders return with spoils. The enemy reacts swiftly.",
+    "event.war.raid_result.choice1": "Celebrate the win and push harder.",
+    "event.war.raid_result.choice2": "Consolidate and tend the wounded.",
+
+    "event.war.siege_result.title": "Siege Outcome",
+    "event.war.siege_result.text": "The siege grinds on. Hunger and fire decide the fate of the walls.",
+    "event.war.siege_result.choice1": "Press the assault.",
+    "event.war.siege_result.choice2": "Lift the siege and regroup.",
+
+    "event.war.peace_talks.title": "Peace Talks",
+    "event.war.peace_talks.text": "Envoys gather. The enemy demands concessions. Will you accept?",
+    "event.war.peace_talks.choice1": "Accept a costly peace to end the war.",
+    "event.war.peace_talks.choice2": "Refuse. We fight on.",
+
     "ending.victory_diplomatic.title": "Diplomatic Triumph",
     "ending.victory_diplomatic.text": "Through treaties and careful words, your reign ends in lasting peace.",
     "ending.victory_military.title": "Conquering Hero",
@@ -170,40 +207,6 @@ export const locales = {
     "ending.coup.title": "Palace Coup",
     "ending.coup.text": "The nobility turns against you and seizes the throne in a swift coup."
   },
-    ,
-    "ui.tab.war": "War",
-    "ui.war_status": "War Status",
-    "ui.war_power": "Power",
-    "ui.war_enemy": "Enemy",
-    "ui.war_morale": "Morale",
-    "ui.war_progress": "War progress",
-    "ui.war_victory_hint": "Reduce enemy power to 0 to win the war.",
-    "ui.war_defeat_hint": "If your war morale hits 0, your reign may collapse.",
-
-    "war.raid.title": "Raid Supply Lines",
-    "war.raid.desc": "Fast raids to weaken the enemy and steal supplies.",
-    "war.siege.title": "Lay Siege",
-    "war.siege.desc": "A costly siege that can break the enemy if you are strong enough.",
-    "war.reinforce.title": "Reinforce Army",
-    "war.reinforce.desc": "Spend gold to reinforce troops and improve your position.",
-    "war.seek_peace.title": "Seek Peace",
-    "war.seek_peace.desc": "Attempt peace talks; success depends on your diplomacy and the war state.",
-
-    "event.war.raid_result.title": "Raid Aftermath",
-    "event.war.raid_result.text": "Your raiders return with spoils. The enemy reacts swiftly.",
-    "event.war.raid_result.choice1": "Celebrate the win and push harder.",
-    "event.war.raid_result.choice2": "Consolidate and tend the wounded.",
-
-    "event.war.siege_result.title": "Siege Outcome",
-    "event.war.siege_result.text": "The siege grinds on. Hunger and fire decide the fate of the walls.",
-    "event.war.siege_result.choice1": "Press the assault.",
-    "event.war.siege_result.choice2": "Lift the siege and regroup.",
-
-    "event.war.peace_talks.title": "Peace Talks",
-    "event.war.peace_talks.text": "Envoys gather. The enemy demands concessions. Will you accept?",
-    "event.war.peace_talks.choice1": "Accept a costly peace to end the war.",
-    "event.war.peace_talks.choice2": "Refuse. We fight on."
-
 
   pt: {
     "ui.select_language": "Selecionar Idioma",
@@ -213,17 +216,22 @@ export const locales = {
     "ui.next": "Próximo",
     "ui.turn": "Turno",
     "ui.actions_remaining": "Ações restantes: {pa}",
+
     "ui.stats.legitimacy": "Legitimidade",
     "ui.stats.gold": "Ouro",
     "ui.stats.military": "Militar",
     "ui.stats.diplomacy": "Diplomacia",
+
     "ui.tab.actions": "Ações",
     "ui.tab.realm": "Reino",
     "ui.tab.council": "Conselho",
+    "ui.tab.war": "Guerra",
     "ui.end_turn": "Terminar Turno",
+
     "ui.game_over": "Fim de Jogo",
     "ui.victory": "Vitória",
     "ui.play_again": "Jogar Novamente",
+
     "ui.diplomacy_meta": "Tratados",
     "ui.alliances": "Alianças",
     "ui.wars": "Guerras",
@@ -242,6 +250,14 @@ export const locales = {
     "region.frontier": "Fronteira",
     "ui.prosperity": "Prosperidade",
     "ui.unrest": "Agitação",
+
+    "ui.war_status": "Estado da Guerra",
+    "ui.war_power": "Força",
+    "ui.war_enemy": "Inimigo",
+    "ui.war_morale": "Moral",
+    "ui.war_progress": "Progresso da guerra",
+    "ui.war_victory_hint": "Reduza a força do inimigo a 0 para vencer a guerra.",
+    "ui.war_defeat_hint": "Se a moral de guerra chegar a 0, seu reinado pode ruir.",
 
     "nation.england.name": "Inglaterra",
     "nation.england.desc": "Um reino marítimo com forte diplomacia.",
@@ -306,6 +322,15 @@ export const locales = {
     "action.explore_new_land.title": "Explorar Novas Terras",
     "action.explore_new_land.desc": "Envie exploradores em busca de oportunidades.",
 
+    "war.raid.title": "Ataque às Linhas",
+    "war.raid.desc": "Ataques rápidos para enfraquecer o inimigo e saquear suprimentos.",
+    "war.siege.title": "Cercar Fortificação",
+    "war.siege.desc": "Um cerco custoso que pode quebrar o inimigo se você for forte o suficiente.",
+    "war.reinforce.title": "Reforçar Exército",
+    "war.reinforce.desc": "Gaste ouro para reforçar tropas e melhorar sua posição.",
+    "war.seek_peace.title": "Buscar Paz",
+    "war.seek_peace.desc": "Tente negociações; o sucesso depende da sua diplomacia e do estado da guerra.",
+
     "event.succession.title": "A Doença do Rei",
     "event.succession.text": "O rei ficou gravemente doente. A corte sussurra sobre a sucessão. Como você se prepara?",
     "event.succession.choice1": "Prepare o herdeiro com conselho e treinamento.",
@@ -359,6 +384,21 @@ export const locales = {
     "event.prince.dissent.choice1": "Investigar e tratar as preocupações.",
     "event.prince.dissent.choice2": "Desprezar como fofoca.",
 
+    "event.war.raid_result.title": "Resultado do Ataque",
+    "event.war.raid_result.text": "Seus saqueadores retornam com espólios. O inimigo reage rapidamente.",
+    "event.war.raid_result.choice1": "Celebrar e pressionar mais.",
+    "event.war.raid_result.choice2": "Consolidar e cuidar dos feridos.",
+
+    "event.war.siege_result.title": "Desfecho do Cerco",
+    "event.war.siege_result.text": "O cerco se arrasta. Fome e fogo decidem o destino das muralhas.",
+    "event.war.siege_result.choice1": "Intensificar o assalto.",
+    "event.war.siege_result.choice2": "Suspender o cerco e reorganizar.",
+
+    "event.war.peace_talks.title": "Negociações de Paz",
+    "event.war.peace_talks.text": "Emissários se reúnem. O inimigo exige concessões. Você aceita?",
+    "event.war.peace_talks.choice1": "Aceitar uma paz custosa para encerrar a guerra.",
+    "event.war.peace_talks.choice2": "Recusar. Continuaremos lutando.",
+
     "ending.victory_diplomatic.title": "Triunfo Diplomático",
     "ending.victory_diplomatic.text": "Com tratados e palavras certas, seu reinado termina em paz duradoura.",
     "ending.victory_military.title": "Herói Conquistador",
@@ -373,39 +413,5 @@ export const locales = {
     "ending.war_loss.text": "Seus exércitos são destruídos e suas terras tomadas; o exílio o aguarda.",
     "ending.coup.title": "Golpe no Palácio",
     "ending.coup.text": "A nobreza se volta contra você e toma o trono em um golpe rápido."
-    ,
-    "ui.tab.war": "Guerra",
-    "ui.war_status": "Estado da Guerra",
-    "ui.war_power": "Força",
-    "ui.war_enemy": "Inimigo",
-    "ui.war_morale": "Moral",
-    "ui.war_progress": "Progresso da guerra",
-    "ui.war_victory_hint": "Reduza a força do inimigo a 0 para vencer a guerra.",
-    "ui.war_defeat_hint": "Se a moral de guerra chegar a 0, seu reinado pode ruir.",
-
-    "war.raid.title": "Ataque às Linhas",
-    "war.raid.desc": "Ataques rápidos para enfraquecer o inimigo e saquear suprimentos.",
-    "war.siege.title": "Cercar Fortificação",
-    "war.siege.desc": "Um cerco custoso que pode quebrar o inimigo se você for forte o suficiente.",
-    "war.reinforce.title": "Reforçar Exército",
-    "war.reinforce.desc": "Gaste ouro para reforçar tropas e melhorar sua posição.",
-    "war.seek_peace.title": "Buscar Paz",
-    "war.seek_peace.desc": "Tente negociações; o sucesso depende da sua diplomacia e do estado da guerra.",
-
-    "event.war.raid_result.title": "Resultado do Ataque",
-    "event.war.raid_result.text": "Seus saqueadores retornam com espólios. O inimigo reage rapidamente.",
-    "event.war.raid_result.choice1": "Celebrar e pressionar mais.",
-    "event.war.raid_result.choice2": "Consolidar e cuidar dos feridos.",
-
-    "event.war.siege_result.title": "Desfecho do Cerco",
-    "event.war.siege_result.text": "O cerco se arrasta. Fome e fogo decidem o destino das muralhas.",
-    "event.war.siege_result.choice1": "Intensificar o assalto.",
-    "event.war.siege_result.choice2": "Suspender o cerco e reorganizar.",
-
-    "event.war.peace_talks.title": "Negociações de Paz",
-    "event.war.peace_talks.text": "Emissários se reúnem. O inimigo exige concessões. Você aceita?",
-    "event.war.peace_talks.choice1": "Aceitar uma paz custosa para encerrar a guerra.",
-    "event.war.peace_talks.choice2": "Recusar. Continuaremos lutando."
-
   }
 };
