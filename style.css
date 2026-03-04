@@ -96,3 +96,15 @@ body {
   display: flex;
   gap: 1rem;
 }
+/* === Part 8: Avatars + Build === */
+.avatar-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.avatar-card{border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(0,0,0,.22);padding:10px;cursor:pointer;transition:transform .12s ease,filter .12s ease}
+.avatar-card:hover{filter:brightness(1.06)}
+.avatar-card:active{transform:scale(.98)}
+.avatar-card img{width:100%;height:auto;border-radius:14px;background:transparent}
+
+.avatar-hud{width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);object-fit:contain;padding:6px}
+
+.build{margin-top:12px;text-align:center;font-size:12px;opacity:.65}
+.turn-header{display:flex;align-items:center;gap:12px}
+.muted{opacity:.75}

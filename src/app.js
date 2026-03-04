@@ -18,6 +18,9 @@ import {
 
 const appEl = document.getElementById('app');
 
+// Build label (visible inside the game UI)
+const BUILD = `v0.8.0-part8 • ${new Date().toISOString().slice(0,16).replace('T',' ')} UTC`;
+
 let locale = 'en';
 const translations = {};
 const data = {};
@@ -25,6 +28,7 @@ const data = {};
 // Global game state
 let state = {
   nation: null,
+  avatar: null,
   traits: [],
   stats: { legitimacy: 50, gold: 50, military: 50, diplomacy: 50 },
   stage: 'prince',
@@ -33,6 +37,34 @@ let state = {
   flags: {},
   eventsQueue: []
 };
+
+const SAVE_KEY = 'medieval_kingdoms_save_v1';
+
+function saveGame() {
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify({ locale, state }));
+  } catch (_) {}
+}
+
+function loadSavedGame() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return false;
+    const parsed = JSON.parse(raw);
+    if (parsed?.locale) locale = parsed.locale;
+    if (parsed?.state) state = parsed.state;
+    state.avatar = state.avatar || null;
+    state.flags = state.flags || {};
+    state.eventsQueue = state.eventsQueue || [];
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+function clearSave() {
+  try { localStorage.removeItem(SAVE_KEY); } catch (_) {}
+}
 
 async function loadData() {
   // Populate translations from the locales module
@@ -63,6 +95,11 @@ function t(key, params) {
 function render(element) {
   appEl.innerHTML = '';
   appEl.appendChild(element);
+
+  const build = document.createElement('div');
+  build.className = 'build';
+  build.textContent = `${t('ui.build')}: ${BUILD}`;
+  appEl.appendChild(build);
 }
 
 function createButton(label, onClick) {
@@ -83,6 +120,36 @@ function renderLanguageSelect() {
   const subtitle = document.createElement('p');
   subtitle.textContent = t('ui.select_language');
   card.appendChild(subtitle);
+
+  // Save-aware quick menu
+  const menu = document.createElement('div');
+  menu.className = 'language-select';
+  const hasSave = (() => { try { return !!localStorage.getItem(SAVE_KEY); } catch (_) { return false; } })();
+  if (hasSave) {
+    menu.appendChild(createButton(t('ui.continue'), () => {
+      if (loadSavedGame()) renderTurn(); else renderNationSelect();
+    }));
+    menu.appendChild(createButton(t('ui.clear_save'), () => {
+      clearSave();
+      renderLanguageSelect();
+    }));
+  }
+  menu.appendChild(createButton(t('ui.new_game'), () => {
+    clearSave();
+    state = {
+      nation: null,
+      avatar: null,
+      traits: [],
+      stats: { legitimacy: 50, gold: 50, military: 50, diplomacy: 50 },
+      stage: 'prince',
+      turn: 1,
+      pa: 0,
+      flags: {},
+      eventsQueue: []
+    };
+    renderNationSelect();
+  }));
+  card.appendChild(menu);
   const langContainer = document.createElement('div');
   langContainer.className = 'language-select';
   const btnEn = createButton('English', () => { locale = 'en'; renderNationSelect(); });
@@ -125,7 +192,50 @@ function selectNation(nation) {
   state.nation = nation;
   // initialize stats copy
   state.stats = JSON.parse(JSON.stringify(nation.stats));
-  renderTraitsSelect();
+  renderAvatarSelect();
+}
+
+// Avatar selection (cinematic portraits)
+const AVATARS = [
+  { id: 'avatar_1', src: 'assets/images/avatars/avatar_1.png' },
+  { id: 'avatar_2', src: 'assets/images/avatars/avatar_2.png' },
+  { id: 'avatar_3', src: 'assets/images/avatars/avatar_3.png' },
+  { id: 'avatar_4', src: 'assets/images/avatars/avatar_4.png' },
+  { id: 'avatar_5', src: 'assets/images/avatars/avatar_5.png' },
+  { id: 'avatar_6', src: 'assets/images/avatars/avatar_6.png' }
+];
+
+function renderAvatarSelect() {
+  const card = document.createElement('div');
+  card.className = 'card';
+  const title = document.createElement('h2');
+  title.textContent = t('ui.choose_avatar');
+  card.appendChild(title);
+
+  const hint = document.createElement('p');
+  hint.className = 'muted';
+  hint.textContent = t('ui.avatar_hint');
+  card.appendChild(hint);
+
+  const grid = document.createElement('div');
+  grid.className = 'avatar-grid';
+
+  AVATARS.forEach(a => {
+    const btn = document.createElement('div');
+    btn.className = 'avatar-card';
+    const img = document.createElement('img');
+    img.src = a.src;
+    img.alt = a.id;
+    btn.appendChild(img);
+    btn.onclick = () => {
+      state.avatar = a;
+      renderTraitsSelect();
+    };
+    grid.appendChild(btn);
+  });
+
+  card.appendChild(grid);
+  render(card);
 }
 
 // Trait selection screen (choose 2)
@@ -182,6 +292,7 @@ function startGameplay() {
   state.eventsQueue = [];
   // Determine initial events? We can queue tutor event immediately
   // We'll rely on event triggers in endTurn
+  saveGame();
   renderTurn();
 }
 
@@ -203,9 +314,19 @@ function getAvailableActions() {
 function renderTurn() {
   const container = document.createElement('div');
   container.className = 'card';
+  const header = document.createElement('div');
+  header.className = 'turn-header';
+  if (state.avatar?.src) {
+    const av = document.createElement('img');
+    av.className = 'avatar-hud';
+    av.src = state.avatar.src;
+    av.alt = state.avatar.id;
+    header.appendChild(av);
+  }
   const h = document.createElement('h2');
   h.textContent = `${t('ui.turn')} ${state.turn}`;
-  container.appendChild(h);
+  header.appendChild(h);
+  container.appendChild(header);
   // Stats bar
   const statsBar = document.createElement('div');
   statsBar.className = 'stats-bar';
@@ -303,7 +424,8 @@ function endTurn() {
   // Increase turn
   state.turn += 1;
   // Stage transition: after certain turn or after milestone we can move to king
-  if (state.stage === 'prince' && state.turn >= 4) {
+  // Longer prince phase for a real campaign
+  if (state.stage === 'prince' && state.turn >= 12 && state.stats.legitimacy >= 55) {
     state.stage = 'king';
   }
   // Evaluate arcs (milestones)
@@ -312,6 +434,7 @@ function endTurn() {
   processEvents();
   // After events processed, check endings
   if (!checkEndings()) {
+    saveGame();
     renderTurn();
   }
 }
@@ -476,6 +599,8 @@ function checkEndings() {
 
 function meetsRequirements(req) {
   if (!req) return false;
+  if (req.turnAtLeast && state.turn < req.turnAtLeast) return false;
+  if (req.stageIn && !req.stageIn.includes(state.stage)) return false;
   if (req.minStats) {
     for (const k in req.minStats) {
       if ((state.stats[k] || 0) < req.minStats[k]) return false;
@@ -513,8 +638,10 @@ function showEnding(ending, victory) {
   card.appendChild(summary);
   const playAgain = createButton(t('ui.play_again'), () => {
     // restart game
+    clearSave();
     state = {
       nation: null,
+      avatar: null,
       traits: [],
       stats: { legitimacy: 50, gold: 50, military: 50, diplomacy: 50 },
       stage: 'prince',

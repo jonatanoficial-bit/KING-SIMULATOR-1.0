@@ -91,7 +91,7 @@ export const turnRules = /* turn_rules.json */
     "military": 0,
     "diplomacy": 0
   },
-  "max_turns": 24
+  "max_turns": 240
 };
 
 export const actions = {
@@ -774,21 +774,21 @@ export const endings = /* endings.json */
   "victory": [
     {
       "id": "victory_diplomatic",
-      "requirements": {"minStats": {"diplomacy": 80}},
+      "requirements": {"turnAtLeast": 120, "stageIn": ["king"], "minStats": {"diplomacy": 200}},
       "titleKey": "ending.victory_diplomatic.title",
       "textKey": "ending.victory_diplomatic.text",
       "image": "assets/images/endings/victory.png"
     },
     {
       "id": "victory_military",
-      "requirements": {"minStats": {"military": 80}},
+      "requirements": {"turnAtLeast": 120, "stageIn": ["king"], "minStats": {"military": 200}},
       "titleKey": "ending.victory_military.title",
       "textKey": "ending.victory_military.text",
       "image": "assets/images/endings/victory.png"
     },
     {
       "id": "victory_economic",
-      "requirements": {"minStats": {"gold": 150}},
+      "requirements": {"turnAtLeast": 120, "stageIn": ["king"], "minStats": {"gold": 650}},
       "titleKey": "ending.victory_economic.title",
       "textKey": "ending.victory_economic.text",
       "image": "assets/images/endings/victory.png"
